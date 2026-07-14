@@ -1,0 +1,63 @@
+/* Design tokens — the single source of truth for every visual value on the site.
+   Swapping the design system means replacing the values in this file only.
+   Vibrant-dark palette: dark base, distinct vivid hue per app category
+   (app/tool/game/mobile), used for tag chips, filter pills, and card covers. */
+:root {
+  /* Surfaces — dark with a touch of indigo depth, not flat black */
+  --bg: #0a0a14;
+  --surface-1: #16141f;
+  --surface-2: #201d2e;
+  --surface-3: #110f1a;
+
+  /* Text */
+  --text: #f0eef7;
+  --text-strong: #ffffff;
+  --text-body: #cdc8de;
+  --text-muted: #b6b0c7;
+  --text-soft: #a89fc0;
+  --text-faint: #948da8;
+  --text-dim: #837c96;
+  --text-dimmer: #6f6884;
+
+  /* Primary accent — vivid cyan, used for interactive UI (pulse, links, focus, hover) */
+  --accent: #22d3ee;
+  --accent-hover: #67e8f9;
+  --accent-glow: rgba(34, 211, 238, 0.55);
+  --accent-border: rgba(34, 211, 238, 0.65);
+  --accent-border-strong: rgba(34, 211, 238, 0.75);
+
+  /* Category accents — one distinct vivid hue per app tag/category */
+  --cat-app: #fb7185; /* rose */
+  --cat-tool: #a78bfa; /* violet */
+  --cat-game: #fbbf24; /* amber */
+  --cat-mobile: #34d399; /* emerald */
+  --cat-default: #22d3ee; /* falls back to the primary accent */
+
+  /* Dark ink for text placed on top of any vivid accent/category color */
+  --ink: #12101c;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.13);
+  --border-bright: rgba(255, 255, 255, 0.16);
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radii */
+  --radius-card: 16px;
+  --radius-card-lg: 18px;
+  --radius-panel: 24px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 20px 44px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: 0 24px 54px rgba(0, 0, 0, 0.55);
+  --shadow-panel: 0 40px 90px rgba(0, 0, 0, 0.45);
+
+  /* Motion */
+  --ease-card: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

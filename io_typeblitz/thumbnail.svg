@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a0a14"/>
+      <stop offset="0.75" stop-color="#110f1a"/>
+      <stop offset="1" stop-color="#16141f"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fb7185"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="keylit" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fcd34d"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+
+  <!-- faint falling words -->
+  <g font-family="Consolas, 'JetBrains Mono', monospace" font-size="30" fill="#948da8" opacity="0.5">
+    <text x="120" y="120">storm</text>
+    <text x="330" y="200" opacity="0.7">quick</text>
+    <text x="560" y="95">blaze</text>
+    <text x="780" y="170" opacity="0.6">rocket</text>
+    <text x="1000" y="110">wpm</text>
+    <text x="200" y="300" opacity="0.45">fast</text>
+    <text x="905" y="290" opacity="0.5">combo</text>
+    <text x="1060" y="230" opacity="0.4">jf jf</text>
+  </g>
+  <!-- one word being destroyed -->
+  <g font-family="Consolas, 'JetBrains Mono', monospace" font-size="34">
+    <rect x="435" y="228" rx="26" width="212" height="56" fill="#201d2e" stroke="#fbbf24" stroke-width="2.5"/>
+    <text x="465" y="266" fill="#fbbf24" font-weight="bold">bli</text>
+    <text x="527" y="266" fill="#f0eef7">tz</text>
+    <circle cx="620" cy="256" r="5" fill="#fbbf24" filter="url(#glow)"/>
+  </g>
+
+  <!-- wordmark as keycaps -->
+  <g transform="translate(140,330)">
+    <!-- row 1: TYPE -->
+    <g>
+      <rect x="0" y="0" width="200" height="200" rx="28" fill="#201d2e" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+      <rect x="230" y="0" width="200" height="200" rx="28" fill="#201d2e" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+      <rect x="460" y="0" width="200" height="200" rx="28" fill="url(#keylit)" filter="url(#glow)"/>
+      <rect x="690" y="0" width="200" height="200" rx="28" fill="#201d2e" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+      <g font-family="Consolas, 'JetBrains Mono', monospace" font-size="128" font-weight="bold" text-anchor="middle">
+        <text x="100" y="145" fill="#f0eef7">T</text>
+        <text x="330" y="145" fill="#f0eef7">Y</text>
+        <text x="560" y="145" fill="#12101c">P</text>
+        <text x="790" y="145" fill="#f0eef7">E</text>
+      </g>
+    </g>
+    <!-- row 2: BLITZ (offset like a keyboard row) -->
+    <g transform="translate(115,230)">
+      <rect x="0" y="0" width="160" height="160" rx="24" fill="#201d2e" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+      <rect x="185" y="0" width="160" height="160" rx="24" fill="url(#keylit)" filter="url(#glow)"/>
+      <rect x="370" y="0" width="160" height="160" rx="24" fill="#201d2e" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+      <rect x="555" y="0" width="160" height="160" rx="24" fill="#201d2e" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+      <rect x="740" y="0" width="160" height="160" rx="24" fill="#22d3ee" filter="url(#glow)"/>
+      <g font-family="Consolas, 'JetBrains Mono', monospace" font-size="100" font-weight="bold" text-anchor="middle">
+        <text x="80" y="115" fill="#f0eef7">B</text>
+        <text x="265" y="115" fill="#12101c">L</text>
+        <text x="450" y="115" fill="#f0eef7">I</text>
+        <text x="635" y="115" fill="#f0eef7">T</text>
+        <text x="820" y="115" fill="#12101c">Z</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- HUD strip -->
+  <g transform="translate(0,758)" font-family="Consolas, 'JetBrains Mono', monospace">
+    <rect x="140" y="0" rx="34" width="250" height="68" fill="#16141f" stroke="#fbbf24" stroke-width="3"/>
+    <text x="265" y="46" font-size="38" font-weight="bold" fill="#fbbf24" text-anchor="middle">87 WPM</text>
+    <rect x="420" y="0" rx="34" width="220" height="68" fill="#16141f" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+    <text x="530" y="46" font-size="38" font-weight="bold" fill="#34d399" text-anchor="middle">98.6%</text>
+    <rect x="670" y="0" rx="34" width="240" height="68" fill="#16141f" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
+    <text x="790" y="46" font-size="38" font-weight="bold" fill="#22d3ee" text-anchor="middle">x42 ⚡</text>
+    <text x="1005" y="50" font-size="48" fill="#fbbf24">★★★</text>
+  </g>
+
+  <!-- ground line -->
+  <rect x="0" y="860" width="1200" height="12" fill="url(#ground)" opacity="0.8"/>
+  <rect x="0" y="845" width="1200" height="27" fill="url(#ground)" opacity="0.15"/>
+</svg>
