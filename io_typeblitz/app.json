@@ -1,6 +1,6 @@
 {
   "title": "TypeBlitz",
-  "description": "Game-like touch-typing trainer: six modes from zen practice to arcade word rain, a 31-level career, XP, streaks, achievements and a stats dashboard. Runs fully offline in your browser.",
+  "description": "Game-like touch-typing trainer: five modes from zen practice to arcade word rain, XP, streaks, achievements and a stats dashboard. Runs fully offline in your browser.",
   "repoUrl": "https://github.com/Gyeboorovsky/typeblitz",
   "demoUrl": "https://gyeboorovsky.github.io/typeblitz/",
   "tags": ["game"],

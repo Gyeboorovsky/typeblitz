@@ -1,19 +1,16 @@
 import type { Profile, RoundResult, StreakState } from '../types';
-import { LEVELS } from './levels';
 
 /* ---------- XP and player level ---------- */
 
 /**
- * XP for a recorded round. Accuracy is squared so sloppy speed pays poorly;
- * level stars and bosses pay a visible bonus. Zen pays half (no pressure, less XP).
+ * XP for a recorded round. Accuracy is squared so sloppy speed pays poorly.
+ * Zen pays half (no pressure, less XP).
  */
-export function xpForRound(result: RoundResult, newStars: number, boss: boolean): number {
+export function xpForRound(result: RoundResult): number {
   if (result.mode === 'falling') return Math.round((result.score ?? 0) / 50);
   const acc = result.accuracy / 100;
   let xp = Math.round(result.words * 2 * acc * acc);
   if (result.maxCombo >= 25) xp += 10;
-  xp += 15 * newStars;
-  if (boss && newStars > 0) xp += 25;
   if (result.mode === 'zen') xp = Math.round(xp / 2);
   return Math.max(0, xp);
 }
@@ -79,10 +76,8 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: 'words-10k', icon: '🏛️', check: (p) => p.totals.words >= 10000 },
   { id: 'hour-club', icon: '⏰', check: (p) => p.totals.timeMs >= 3_600_000 },
   { id: 'marathon-10h', icon: '🏃', check: (p) => p.totals.timeMs >= 36_000_000 },
-  { id: 'graduate', icon: '🎓', check: (p) => LEVELS.every((l) => (p.levels[l.id]?.stars ?? 0) >= 1) },
-  { id: 'star-collector', icon: '🌟', check: (p) => LEVELS.filter((l) => p.levels[l.id]?.stars === 3).length >= 10 },
   { id: 'wave-10', icon: '🌊', check: (_p, r) => r.mode === 'falling' && (r.wave ?? 0) >= 10 },
-  { id: 'explorer', icon: '🧭', check: (p) => p.modesPlayed.length >= 6 },
+  { id: 'explorer', icon: '🧭', check: (p) => p.modesPlayed.length >= 5 },
 ];
 
 /** Ids newly unlocked by this round (profile already updated, minus achievements). */

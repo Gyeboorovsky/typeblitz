@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { fmt, useI18n } from '../i18n';
 import type { Profile, RoundOutcome, RoundResult } from '../types';
 import { ACHIEVEMENTS } from '../game/progression';
-import { LEVELS, levelById } from '../game/levels';
 import { play } from '../game/sound';
 
 interface Props {
@@ -10,7 +9,6 @@ interface Props {
   outcome: RoundOutcome;
   profile: Profile;
   onRetry: () => void;
-  onNext: (nextLevelId: string) => void;
   onHome: () => void;
 }
 
@@ -70,44 +68,28 @@ function Confetti() {
   return <canvas ref={ref} className="tb-confetti" aria-hidden="true" />;
 }
 
-export default function SummaryView({ result, outcome, profile, onRetry, onNext, onHome }: Props) {
+export default function SummaryView({ result, outcome, profile, onRetry, onHome }: Props) {
   const t = useI18n();
-  const level = result.levelId ? levelById(result.levelId) : undefined;
-  const stars = outcome.stars ?? null;
-  const failed = level !== undefined && stars === 0;
   const leveledUp = outcome.levelAfter > outcome.levelBefore;
-  const celebrate = outcome.newBests.length > 0 || stars === 3 || leveledUp;
+  const celebrate = outcome.newBests.length > 0 || leveledUp;
 
   // Celebration sound, once (StrictMode-safe via ref).
   const played = useRef(false);
   useEffect(() => {
     if (played.current) return;
     played.current = true;
-    if (failed) play('error');
-    else if (leveledUp) play('fanfare');
+    if (leveledUp) play('fanfare');
     else if (celebrate) play('star');
-    else if (stars !== null && stars > 0) play('star');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const nextLevel = level && stars !== null && stars > 0 ? LEVELS[level.n] : undefined;
   const prevBest = result.bestSlot ? profile.bests[result.bestSlot] : undefined;
 
   return (
     <div className="tb-summary">
-      {celebrate && !failed && <Confetti />}
-      <h1 className={failed ? 'failed' : ''}>{failed ? t.summary.failedTitle : t.summary.title}</h1>
+      {celebrate && <Confetti />}
+      <h1>{t.summary.title}</h1>
 
-      {stars !== null && (
-        <div className="tb-summary-stars">
-          {[1, 2, 3].map((i) => (
-            <span key={i} className={`big-star ${i <= stars ? 'on' : ''}`} style={{ animationDelay: `${i * 0.25}s` }}>
-              ★
-            </span>
-          ))}
-        </div>
-      )}
-      {failed && <p className="tb-failed-hint">{t.summary.failedHint}</p>}
       {!outcome.recorded && <p className="tb-failed-hint">{t.summary.discardedHint}</p>}
 
       <div className="tb-summary-grid">
@@ -156,15 +138,6 @@ export default function SummaryView({ result, outcome, profile, onRetry, onNext,
       {outcome.newBests.length === 0 && prevBest && result.mode === 'falling' && (
         <p className="tb-prev-best">{fmt(t.summary.bestScore, { score: prevBest.score ?? 0 })}</p>
       )}
-      {level && stars !== null && stars > 0 && stars < 3 && (
-        <p className="tb-prev-best">
-          {fmt(t.summary.starsToBeat, {
-            wpm: stars === 1 ? level.targetWpm : Math.round(level.targetWpm * 1.25),
-            acc: stars === 1 ? 92 : 97,
-          })}
-        </p>
-      )}
-
       {outcome.recorded && outcome.xpGained > 0 && (
         <div className="tb-xp-gain">{fmt(t.summary.xpGained, { xp: outcome.xpGained })}</div>
       )}
@@ -194,11 +167,6 @@ export default function SummaryView({ result, outcome, profile, onRetry, onNext,
         <button className="tb-primary" onClick={onRetry}>
           {t.summary.retry}
         </button>
-        {nextLevel && (
-          <button className="tb-primary next" onClick={() => onNext(nextLevel.id)}>
-            {t.summary.nextLevel} →
-          </button>
-        )}
       </div>
     </div>
   );

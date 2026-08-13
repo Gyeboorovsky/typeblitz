@@ -1,24 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { fmt, useI18n } from '../i18n';
+import { useI18n } from '../i18n';
 import type { ModeId, RoundResult, Settings } from '../types';
 import { accuracy, grossWpm, wordsTyped } from '../engine/typing';
 import { useTypingRound } from '../engine/useTypingRound';
-import { lessonText, randomQuote, wordStream } from '../engine/textGen';
-import { levelById } from '../game/levels';
+import { randomQuote, wordStream } from '../engine/textGen';
 import { play } from '../game/sound';
-import Keyboard from './Keyboard';
 
 interface Props {
   mode: Exclude<ModeId, 'falling'>;
-  levelId?: string;
   settings: Settings;
   onFinish: (result: RoundResult) => void;
   onQuit: () => void;
 }
 
-export default function TypingView({ mode, levelId, settings, onFinish, onQuit }: Props) {
+export default function TypingView({ mode, settings, onFinish, onQuit }: Props) {
   const t = useI18n();
-  const level = levelId ? levelById(levelId) : undefined;
 
   // Round content is fixed for the component's lifetime (App remounts per round).
   const [content] = useState(() => {
@@ -26,7 +22,6 @@ export default function TypingView({ mode, levelId, settings, onFinish, onQuit }
       const q = randomQuote();
       return { text: q.text, author: q.author };
     }
-    if (mode === 'level' && level) return { text: lessonText(level), author: null };
     if (mode === 'sprint') return { text: wordStream(settings.sprintWords), author: null };
     return { text: wordStream(50), author: null }; // time + zen extend on the fly
   });
@@ -66,7 +61,6 @@ export default function TypingView({ mode, levelId, settings, onFinish, onQuit }
             : undefined;
     onFinish({
       mode,
-      levelId,
       wpm,
       accuracy: accuracy(s.correct, s.errors),
       correct: s.correct,
@@ -93,9 +87,8 @@ export default function TypingView({ mode, levelId, settings, onFinish, onQuit }
 
   const remainingMs = durationLimitMs !== null ? Math.max(0, durationLimitMs - round.elapsedMs) : null;
   const started = round.state.startedAt !== null;
-  const nextChar = round.state.cells[round.state.pos]?.char ?? null;
 
-  // Auto-scroll the prompt so the caret stays visible on long lesson texts.
+  // Auto-scroll the prompt so the caret stays visible on long texts.
   const caretRef = useRef<HTMLSpanElement | null>(null);
   const pos = round.state.pos;
   useEffect(() => {
@@ -110,13 +103,6 @@ export default function TypingView({ mode, levelId, settings, onFinish, onQuit }
         <button className="tb-quit" onClick={onQuit} onMouseDown={(e) => e.stopPropagation()}>
           ← {t.round.escToQuit}
         </button>
-        {mode === 'level' && level && (
-          <div className="tb-level-heading">
-            {level.boss && <span className="tb-boss-tag">{t.round.bossTag}</span>}
-            <strong>{fmt(t.round.levelHeading, { n: level.n, title: level.title[settings.language] })}</strong>
-            <span className="tb-level-target">{fmt(t.round.targetWpm, { wpm: level.targetWpm })}</span>
-          </div>
-        )}
         {mode === 'zen' && started && (
           <button className="tb-finish" onClick={finish} onMouseDown={(e) => e.stopPropagation()}>
             {t.round.finishZen}
@@ -176,8 +162,6 @@ export default function TypingView({ mode, levelId, settings, onFinish, onQuit }
       </div>
 
       {content.author && <div className="tb-quote-author">— {content.author}</div>}
-
-      {mode === 'level' && settings.showKeyboard && <Keyboard mode="hint" nextKey={nextChar} />}
     </div>
   );
 }

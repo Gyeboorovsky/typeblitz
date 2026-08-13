@@ -91,15 +91,6 @@ export default function OptionsDrawer({
         )}
 
         <label className="tb-opt">
-          <span>{t.options.showKeyboard}</span>
-          <input
-            type="checkbox"
-            checked={settings.showKeyboard}
-            onChange={(e) => set('showKeyboard', e.target.checked)}
-          />
-        </label>
-
-        <label className="tb-opt">
           <span>{t.options.timeDuration}</span>
           <div className="tb-seg">
             {([15, 30, 60] as const).map((s) => (

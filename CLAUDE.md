@@ -23,12 +23,11 @@ editing it).
 
 ## What the app does
 
-Typing practice as a game. Six modes: Time Attack (15/30/60 s), Word Sprint
+Typing practice as a game. Five modes: Time Attack (15/30/60 s), Word Sprint
 (10/25/50 words), Word Rain (arcade — type falling words, lives/waves/combo),
-Zen (endless, untimed; rounds under 30 s / 10 words are discarded), Quotes,
-and a 31-level Career curriculum (home row → final boss; 0–3 stars per level,
-star-gated unlocks). Gamification: XP + player level, daily streak, 18
-achievements, personal bests, WebAudio sound (synthesized, no assets).
+Zen (endless, untimed; rounds under 30 s / 10 words are discarded), and Quotes.
+Gamification: XP + player level, daily streak, 16 achievements, personal
+bests, WebAudio sound (synthesized, no assets).
 Dashboard: WPM/accuracy trend (inline SVG), per-key error heatmap on a visual
 keyboard, 12-week activity calendar, lifetime totals. UI is i18n'd (en/pl);
 practice content is English.
@@ -39,7 +38,7 @@ Three localStorage stores, versioned keys, runtime-guarded loads
 ([storage.ts](src/storage.ts)):
 
 - `typeblitz:settings:v1` → Settings
-- `typeblitz:profile:v1` → Profile (xp, streak, level stars, achievements, PBs, totals)
+- `typeblitz:profile:v1` → Profile (xp, streak, achievements, PBs, totals)
 - `typeblitz:stats:v1` → StatsLog (per-day stats, last 300 round samples, per-key hit/miss)
 
 Autosave is debounced 400 ms with a beforeunload flush
@@ -56,8 +55,8 @@ export/import is always available in Options. All rounds funnel through
 - `src/engine/` — pure typing engine (`typing.ts`), keystroke-capture hook
   (`useTypingRound.ts` — reads a hidden input's `input` events, not keydown, so
   AltGr/dead keys/IMEs work; paste is blocked), text generation (`textGen.ts`).
-- `src/game/` — `levels.ts` (curriculum + star criteria), `progression.ts`
-  (XP/streak/achievements), `sound.ts` (oscillator synth).
+- `src/game/` — `progression.ts` (XP/streak/achievements), `sound.ts`
+  (oscillator synth).
 - `src/data/` — English word pools and public-domain quotes.
 - `src/components/` — one file per view; `FallingView` runs its own rAF loop
   with all mutable state in a ref (StrictMode-safe).

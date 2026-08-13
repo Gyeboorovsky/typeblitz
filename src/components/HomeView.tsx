@@ -1,13 +1,11 @@
 import { fmt, useI18n } from '../i18n';
 import type { ModeId, Profile, Settings } from '../types';
 import { playerLevel } from '../game/progression';
-import { LEVELS, totalStars } from '../game/levels';
 
 interface Props {
   profile: Profile;
   settings: Settings;
   onStart: (mode: ModeId) => void;
-  onCareer: () => void;
 }
 
 const MODE_ICONS: Record<ModeId, string> = {
@@ -16,15 +14,13 @@ const MODE_ICONS: Record<ModeId, string> = {
   falling: '☄️',
   zen: '🧘',
   quotes: '📜',
-  level: '🎓',
 };
 
-export default function HomeView({ profile, settings, onStart, onCareer }: Props) {
+export default function HomeView({ profile, settings, onStart }: Props) {
   const t = useI18n();
   const pl = playerLevel(profile.xp);
   const xpPct = pl.needed > 0 ? Math.min(100, (pl.into / pl.needed) * 100) : 0;
   const bestWpm = Math.max(0, ...Object.values(profile.bests).map((b) => b.wpm));
-  const stars = totalStars(profile);
 
   const modes: { id: ModeId; desc: string }[] = [
     { id: 'time', desc: fmt(t.modes.time.desc, { s: settings.timeAttackSeconds }) },
@@ -58,15 +54,6 @@ export default function HomeView({ profile, settings, onStart, onCareer }: Props
       </section>
 
       <section className="tb-mode-grid">
-        <button className="tb-mode-card career" onClick={onCareer}>
-          <span className="tb-mode-icon">{MODE_ICONS.level}</span>
-          <span className="tb-mode-name">{t.modes.level.name}</span>
-          <span className="tb-mode-desc">{t.modes.level.desc}</span>
-          <span className="tb-career-progress">
-            <span className="tb-career-fill" style={{ width: `${(stars / (LEVELS.length * 3)) * 100}%` }} />
-          </span>
-          <span className="tb-mode-meta">{fmt(t.home.careerProgress, { stars, total: LEVELS.length * 3 })}</span>
-        </button>
         {modes.map((m) => (
           <button key={m.id} className={`tb-mode-card ${m.id}`} onClick={() => onStart(m.id)}>
             <span className="tb-mode-icon">{MODE_ICONS[m.id]}</span>

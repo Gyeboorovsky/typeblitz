@@ -26,11 +26,9 @@ import {
   writeBackup,
   type FolderStatus,
 } from './localFolder';
-import { levelById, starsFor } from './game/levels';
 import { evaluateAchievements, playerLevel, updateStreak, xpForRound } from './game/progression';
 import { configureSound } from './game/sound';
 import HomeView from './components/HomeView';
-import LevelsView from './components/LevelsView';
 import TypingView from './components/TypingView';
 import FallingView from './components/FallingView';
 import SummaryView from './components/SummaryView';
@@ -39,9 +37,8 @@ import OptionsDrawer from './components/OptionsDrawer';
 
 type View =
   | { name: 'home' }
-  | { name: 'levels' }
   | { name: 'dashboard' }
-  | { name: 'round'; mode: ModeId; levelId?: string }
+  | { name: 'round'; mode: ModeId }
   | { name: 'summary'; result: RoundResult; outcome: RoundOutcome };
 
 const ROUND_SAMPLES_CAP = 300;
@@ -107,17 +104,12 @@ export default function App() {
         return { ...base, recorded: false };
       }
 
-      const level = result.levelId ? levelById(result.levelId) : undefined;
-      const stars = level ? starsFor(result, level) : undefined;
-      const starsBefore = level ? (profile.levels[level.id]?.stars ?? 0) : undefined;
-      const gainedStars = stars !== undefined && starsBefore !== undefined ? Math.max(0, stars - starsBefore) : 0;
-      const xpGained = xpForRound(result, gainedStars, level?.boss ?? false);
+      const xpGained = xpForRound(result);
 
       const next: Profile = {
         ...profile,
         xp: profile.xp + xpGained,
         streak: updateStreak(profile.streak, localDay()),
-        levels: { ...profile.levels },
         bests: { ...profile.bests },
         achievements: { ...profile.achievements },
         modesPlayed: profile.modesPlayed.includes(result.mode)
@@ -131,15 +123,6 @@ export default function App() {
           words: profile.totals.words + result.words,
         },
       };
-
-      if (level && stars !== undefined) {
-        const prev = next.levels[level.id] ?? { stars: 0 as const, bestWpm: 0, bestAccuracy: 0 };
-        next.levels[level.id] = {
-          stars: Math.max(prev.stars, stars) as 0 | 1 | 2 | 3,
-          bestWpm: Math.max(prev.bestWpm, stars > 0 ? result.wpm : prev.bestWpm),
-          bestAccuracy: Math.max(prev.bestAccuracy, result.accuracy),
-        };
-      }
 
       const newBests: string[] = [];
       if (result.bestSlot) {
@@ -198,8 +181,6 @@ export default function App() {
         levelAfter: playerLevel(next.xp).level,
         newBests,
         newAchievements,
-        stars,
-        starsBefore,
       };
     },
     [profile, stats, setProfile, setStats],
@@ -304,7 +285,7 @@ function Shell({ view, setView, settings, profile, stats, finishRound, setOption
   const inRound = view.name === 'round';
   const navRef = useRef<HTMLDivElement | null>(null);
 
-  const startMode = (mode: ModeId, levelId?: string) => setView({ name: 'round', mode, levelId });
+  const startMode = (mode: ModeId) => setView({ name: 'round', mode });
 
   return (
     <div className="tb-app">
@@ -316,9 +297,6 @@ function Shell({ view, setView, settings, profile, stats, finishRound, setOption
           <nav className="tb-nav" ref={navRef}>
             <button className={view.name === 'home' ? 'active' : ''} onClick={() => setView({ name: 'home' })}>
               {t.nav.home}
-            </button>
-            <button className={view.name === 'levels' ? 'active' : ''} onClick={() => setView({ name: 'levels' })}>
-              {t.nav.levels}
             </button>
             <button
               className={view.name === 'dashboard' ? 'active' : ''}
@@ -340,10 +318,7 @@ function Shell({ view, setView, settings, profile, stats, finishRound, setOption
       )}
 
       <main className="tb-main">
-        {view.name === 'home' && <HomeView profile={profile} settings={settings} onStart={startMode} onCareer={() => setView({ name: 'levels' })} />}
-        {view.name === 'levels' && (
-          <LevelsView profile={profile} language={settings.language} onPlay={(levelId) => startMode('level', levelId)} />
-        )}
+        {view.name === 'home' && <HomeView profile={profile} settings={settings} onStart={startMode} />}
         {view.name === 'dashboard' && <DashboardView profile={profile} stats={stats} />}
         {view.name === 'round' &&
           (view.mode === 'falling' ? (
@@ -351,10 +326,9 @@ function Shell({ view, setView, settings, profile, stats, finishRound, setOption
           ) : (
             <TypingView
               mode={view.mode}
-              levelId={view.levelId}
               settings={settings}
               onFinish={finishRound}
-              onQuit={() => setView(view.mode === 'level' ? { name: 'levels' } : { name: 'home' })}
+              onQuit={() => setView({ name: 'home' })}
             />
           ))}
         {view.name === 'summary' && (
@@ -362,9 +336,8 @@ function Shell({ view, setView, settings, profile, stats, finishRound, setOption
             result={view.result}
             outcome={view.outcome}
             profile={profile}
-            onRetry={() => startMode(view.result.mode, view.result.levelId)}
-            onNext={(nextLevelId) => startMode('level', nextLevelId)}
-            onHome={() => setView(view.result.mode === 'level' ? { name: 'levels' } : { name: 'home' })}
+            onRetry={() => startMode(view.result.mode)}
+            onHome={() => setView({ name: 'home' })}
           />
         )}
       </main>

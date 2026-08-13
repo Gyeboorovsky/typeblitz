@@ -30,7 +30,6 @@ export const DEFAULT_SETTINGS: Settings = {
   language: 'en',
   sound: true,
   volume: 0.5,
-  showKeyboard: true,
   timeAttackSeconds: 30,
   sprintWords: 25,
 };
@@ -40,7 +39,6 @@ export function emptyProfile(): Profile {
     version: 1,
     xp: 0,
     streak: { current: 0, best: 0, lastDay: null },
-    levels: {},
     achievements: {},
     bests: {},
     modesPlayed: [],
@@ -70,7 +68,6 @@ export function loadProfile(): Profile {
     parsed.version !== 1 ||
     typeof parsed.xp !== 'number' ||
     !isRecord(parsed.streak) ||
-    !isRecord(parsed.levels) ||
     !isRecord(parsed.achievements) ||
     !isRecord(parsed.bests) ||
     !isRecord(parsed.totals)

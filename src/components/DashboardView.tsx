@@ -10,7 +10,7 @@ interface Props {
   stats: StatsLog;
 }
 
-const MODE_FILTERS: (ModeId | 'all')[] = ['all', 'time', 'sprint', 'quotes', 'level', 'zen', 'falling'];
+const MODE_FILTERS: (ModeId | 'all')[] = ['all', 'time', 'sprint', 'quotes', 'zen', 'falling'];
 
 function TrendChart({ stats }: { stats: StatsLog }) {
   const t = useI18n();
@@ -136,7 +136,7 @@ export default function DashboardView({ profile, stats }: Props) {
         <section className="tb-card">
           <h2>{t.dash.heatmap}</h2>
           <p className="tb-hint">{t.dash.heatmapHint}</p>
-          {haveKeys ? <Keyboard mode="heat" keys={stats.keys} /> : <p className="tb-empty">{t.dash.heatmapEmpty}</p>}
+          {haveKeys ? <Keyboard keys={stats.keys} /> : <p className="tb-empty">{t.dash.heatmapEmpty}</p>}
         </section>
 
         <section className="tb-card">

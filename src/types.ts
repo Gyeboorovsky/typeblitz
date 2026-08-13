@@ -1,21 +1,14 @@
 export type Language = 'en' | 'pl';
 
-export type ModeId = 'time' | 'sprint' | 'falling' | 'zen' | 'quotes' | 'level';
+export type ModeId = 'time' | 'sprint' | 'falling' | 'zen' | 'quotes';
 
 export interface Settings {
   version: 1;
   language: Language;
   sound: boolean;
   volume: number; // 0..1
-  showKeyboard: boolean; // on-screen next-key hint during lesson rounds
   timeAttackSeconds: 15 | 30 | 60;
   sprintWords: 10 | 25 | 50;
-}
-
-export interface LevelProgress {
-  stars: 0 | 1 | 2 | 3;
-  bestWpm: number;
-  bestAccuracy: number;
 }
 
 export interface PersonalBest {
@@ -43,7 +36,6 @@ export interface Profile {
   version: 1;
   xp: number;
   streak: StreakState;
-  levels: Record<string, LevelProgress>; // keyed by level id 'l01'..'l31'
   achievements: Record<string, string>; // achievement id -> unlockedAt ISO
   bests: Record<string, PersonalBest>; // PB slot ('time-30', 'sprint-25', 'falling', 'quotes')
   modesPlayed: ModeId[];
@@ -81,7 +73,6 @@ export interface StatsLog {
 /** Runtime output of a finished round — folded into the stores by recordRound. */
 export interface RoundResult {
   mode: ModeId;
-  levelId?: string;
   wpm: number;
   accuracy: number; // 0..100
   correct: number; // correctly typed chars
@@ -103,8 +94,6 @@ export interface RoundOutcome {
   levelAfter: number;
   newBests: string[]; // PB slots beaten this round
   newAchievements: string[]; // achievement ids unlocked this round
-  stars?: 0 | 1 | 2 | 3; // level mode: stars earned this round
-  starsBefore?: 0 | 1 | 2 | 3;
 }
 
 /** Local calendar day as 'YYYY-MM-DD' (not UTC — streaks follow the user's clock). */
